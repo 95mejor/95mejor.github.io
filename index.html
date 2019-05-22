@@ -342,7 +342,7 @@
                 
               
 
-              <time title="创建时间：2019-05-22 20:10:04 / 修改时间：20:11:23" itemprop="dateCreated datePublished" datetime="2019-05-22T20:10:04+08:00">2019-05-22</time>
+              <time title="创建时间：2019-05-22 20:10:04 / 修改时间：20:13:42" itemprop="dateCreated datePublished" datetime="2019-05-22T20:10:04+08:00">2019-05-22</time>
             
 
             
@@ -403,7 +403,7 @@
 <h6 id="7、开启vsftpd服务，设置开机启动"><a href="#7、开启vsftpd服务，设置开机启动" class="headerlink" title="7、开启vsftpd服务，设置开机启动"></a>7、开启vsftpd服务，设置开机启动</h6><p>​    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">​	systemctl start vsftpd.service</span><br><span class="line">​	systemctl enable vsftpd.service</span><br><span class="line">​	systemctl restart vsftpd.service   每次修改vsftpd.conf文件，都需要重启</span><br><span class="line">​</span><br></pre></td></tr></table></figure></p>
 <h6 id="8、ftp服务验证"><a href="#8、ftp服务验证" class="headerlink" title="8、ftp服务验证"></a>8、ftp服务验证</h6><p>​    打开浏览器输入ftp://目的主机的ip地址，输入用户名密码，成功显示目录结构，即验证成功。</p>
 <h4 id="三、文件上传不报错但目录下没有上传的文件"><a href="#三、文件上传不报错但目录下没有上传的文件" class="headerlink" title="三、文件上传不报错但目录下没有上传的文件"></a>三、文件上传不报错但目录下没有上传的文件</h4><p>​    解决思路：这个问题的原因还是vsftpd服务器环境没有搭建成功，原因有四个方面：<br>​    1、检查是否是被动模式<br>​    打开/etc/vsftpd/vsftpd.conf文件，查看对应的配置是否设置正确，如不正确进行改正；这个主要是因为防火墙并没有开放所有端口，也是出于安全考虑，所以我们需要检查这个配置文件，让vsftpd指定数据传输端口。<br>​    2、检查防火墙规则<br>​        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --list-ports</span><br><span class="line">​</span><br></pre></td></tr></table></figure></p>
-<p>​        查看防火墙开放了哪些端口，vsftpd需要的端口保证已经全部开放。<br>​        打开防火墙的ftp服务。<br>​        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">​firewall-cmd --get-service=ftp  检查是否开放ftp服务</span><br><span class="line">​	firewall-cmd --add-service=ftp --permanent   永久开放ftp服务</span><br><span class="line">​	firewall-cmd --reload   每次修改防火墙需要重启设置才能生效</span><br><span class="line">​</span><br></pre></td></tr></table></figure></p>
+<p>​        查看防火墙开放了哪些端口，vsftpd需要的端口保证已经全部开放。<br>​        打开防火墙的ftp服务。<br>​        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">​	firewall-cmd --get-service=ftp  检查是否开放ftp服务</span><br><span class="line">​	firewall-cmd --add-service=ftp --permanent   永久开放ftp服务</span><br><span class="line">​	firewall-cmd --reload   每次修改防火墙需要重启设置才能生效</span><br><span class="line">​</span><br></pre></td></tr></table></figure></p>
 <p>​    3、文件夹权限问题<br>​    查看ftp文件夹的用户权限，保证目录下的文件和文件夹的所有者和用户组都是ftpuser，修改权限参照上述。<br>​    4、系统版本造成的问题<br>​    如果是CentOS7系统，在设置虚拟用户的时候需要手动添加数据文件.db，并配置PAM认证方式，就是本文上述的PAM认证方式。但如果是Centos6系统，我们就不需要添加这些文件，并保留原有的/etc/pam.d/vsftpd文件不变，从上述的三个方面查找原因。</p>
 
           
